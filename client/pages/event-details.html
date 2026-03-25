@@ -9,7 +9,7 @@
 </head>
 <body>
   <nav>
-    <h1>🎉 FlexHub - Event Details</h1>
+    <h1>Event Details</h1>
     <div>
       <a href="/">Home</a>
       <a href="/browse-events">Browse Events</a>
@@ -18,15 +18,16 @@
     <div id="nav-user-info"></div>
   </nav>
 
-  <div class="container">
-    <div id="eventDetails" style="margin-bottom: 2rem;">
-      <p style="text-align: center;">Loading event details...</p>
+  <div class="container event-layout">
+    <div id="eventDetails">
+      <p class="panel text-center p-2">Loading event details...</p>
     </div>
 
     <div class="registration-form-container" id="registrationSection" style="display: none;">
       <h2>Register for This Event</h2>
-      
-      <form id="registrationForm">
+      <p class="registration-form-intro">Complete your team details below to continue with registration.</p>
+
+      <form id="registrationForm" style="padding: 0; background: transparent; border: none; box-shadow: none; max-width: none; margin: 0;">
         <div class="form-group">
           <label for="teamName">Team Name *</label>
           <input type="text" id="teamName" name="teamName" required placeholder="Enter your team name">
@@ -38,7 +39,6 @@
         </div>
 
         <div id="teamMembersContainer" class="team-members-container">
-          <!-- Team member inputs will be generated here -->
         </div>
 
         <button type="submit" class="form-submit">Complete Registration</button>
@@ -72,7 +72,6 @@
 
         displayEventDetails(currentEvent);
 
-        // Show registration form only if user is logged in and is participant
         if (isLoggedIn()) {
           const user = getLoggedInUser();
           if (user.role === 'participant') {
@@ -100,35 +99,35 @@
         </div>
         <div class="event-details-section">
           <div class="event-meta">
-            <p><strong>Mode:</strong> ${event.eventMode.toUpperCase()}</p>
-            <p><strong>Date & Time:</strong> ${eventDate}</p>
-            <p><strong>Registration Deadline:</strong> ${deadlineDate}</p>
-            <p><strong>Team Size:</strong> ${event.teamMinSize} - ${event.teamMaxSize} members</p>
-            <p><strong>Registration Fee:</strong> ₹${event.registrationFee}</p>
+            <p><strong>Mode</strong>${event.eventMode.toUpperCase()}</p>
+            <p><strong>Date & Time</strong>${eventDate}</p>
+            <p><strong>Registration Deadline</strong>${deadlineDate}</p>
+            <p><strong>Team Size</strong>${event.teamMinSize} - ${event.teamMaxSize} members</p>
+            <p><strong>Registration Fee</strong>Rs. ${event.registrationFee}</p>
           </div>
-          
+
           <div class="event-info">
             <h3>Description</h3>
             <p>${event.description}</p>
-            
+
             ${event.rules ? `<h3>Rules & Guidelines</h3>
             <p>${event.rules}</p>` : ''}
-            
-            ${event.eventMode === 'offline' || event.eventMode === 'hybrid' 
-              ? `<p><strong>Venue:</strong> ${event.venue}</p>` 
+
+            ${event.eventMode === 'offline' || event.eventMode === 'hybrid'
+              ? `<p><strong>Venue:</strong> ${event.venue}</p>`
               : ''}
-            
-            ${event.eventMode === 'online' || event.eventMode === 'hybrid' 
-              ? `<p><strong>Meeting Link:</strong> <a href="${event.meetingLink}" target="_blank">${event.meetingLink}</a></p>` 
+
+            ${event.eventMode === 'online' || event.eventMode === 'hybrid'
+              ? `<p><strong>Meeting Link:</strong> <a href="${event.meetingLink}" target="_blank">${event.meetingLink}</a></p>`
               : ''}
-            
-            <div style="margin-top: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 6px;">
+
+            <div class="event-inline-note">
               <p><strong>Total Registrations:</strong> ${event.totalRegistrations}</p>
             </div>
           </div>
-          
+
           <div class="organizer-info">
-            <h4>Organized by: ${event.organizer.name}</h4>
+            <h4>Organized by ${event.organizer.name}</h4>
             <p>Email: ${event.organizer.email}</p>
           </div>
         </div>
@@ -139,10 +138,8 @@
       const form = document.getElementById('registrationForm');
       if (!form) return;
 
-      // Initialize team members input
       updateTeamMemberInputs(event.teamMinSize);
 
-      // Team size change handler
       document.getElementById('teamSize')?.addEventListener('change', (e) => {
         const size = parseInt(e.target.value);
         if (size >= event.teamMinSize && size <= event.teamMaxSize) {
@@ -154,30 +151,27 @@
         }
       });
 
-      // Form submission
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const teamName = document.getElementById('teamName').value;
         const teamSize = parseInt(document.getElementById('teamSize').value);
 
-        // Validate team size
         if (teamSize < event.teamMinSize || teamSize > event.teamMaxSize) {
           alert(`Team size must be between ${event.teamMinSize} and ${event.teamMaxSize}`);
           return;
         }
 
-        // Collect team members
         const teamMembers = [];
         for (let i = 0; i < teamSize; i++) {
           const name = document.getElementById(`memberName${i}`)?.value;
           const email = document.getElementById(`memberEmail${i}`)?.value;
-          
+
           if (!name || !email) {
             alert('Please fill in all team member details');
             return;
           }
-          
+
           teamMembers.push({ name, email });
         }
 
@@ -188,26 +182,22 @@
         };
 
         try {
-          // Show loading state
           const submitBtn = e.target.querySelector('button[type="submit"]');
           const originalText = submitBtn.textContent;
           submitBtn.textContent = 'Processing...';
           submitBtn.disabled = true;
 
-          // Create checkout session if payment is required
           if (event.registrationFee > 0) {
             const checkoutResponse = await paymentAPI.createCheckoutSession(registrationData);
-            
+
             if (checkoutResponse.checkoutUrl) {
-              // Redirect to Stripe checkout
               window.location.href = checkoutResponse.checkoutUrl;
             } else {
               throw new Error('Failed to create payment session');
             }
           } else {
-            // If no payment required, proceed with direct registration
             await registrationAPI.registerForEvent(registrationData);
-            alert('🎉 Registration successful! Check your dashboard for status.');
+            alert('Registration successful! Check your dashboard for status.');
             window.location.href = '/participant-dashboard';
           }
         } catch (error) {
@@ -225,22 +215,22 @@
       if (!container) return;
 
       container.innerHTML = '';
-      
+
       for (let i = 0; i < count; i++) {
         const memberDiv = document.createElement('div');
         memberDiv.className = 'team-member-input';
         memberDiv.innerHTML = `
           <h4>Team Member ${i + 1}</h4>
-          <input 
-            type="text" 
-            id="memberName${i}" 
-            placeholder="Full Name" 
+          <input
+            type="text"
+            id="memberName${i}"
+            placeholder="Full Name"
             required
           >
-          <input 
-            type="email" 
-            id="memberEmail${i}" 
-            placeholder="Email Address" 
+          <input
+            type="email"
+            id="memberEmail${i}"
+            placeholder="Email Address"
             required
           >
         `;
@@ -250,4 +240,3 @@
   </script>
 </body>
 </html>
-

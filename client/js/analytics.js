@@ -1,6 +1,7 @@
 // Analytics Page Logic
 
-let analyticsChart = null;
+let analyticsLineChart = null;
+let analyticsPieChart = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   redirectIfNotRole('organizer');
@@ -172,11 +173,11 @@ const drawLineChart = (registrationsPerDay) => {
   const dates = Object.keys(registrationsPerDay).sort();
   const data = dates.map((date) => registrationsPerDay[date]);
 
-  if (analyticsChart) {
-    analyticsChart.destroy();
+  if (analyticsLineChart) {
+    analyticsLineChart.destroy();
   }
 
-  analyticsChart = new Chart(ctx, {
+  analyticsLineChart = new Chart(ctx, {
     type: 'line',
     data: {
       labels: dates,
@@ -184,27 +185,99 @@ const drawLineChart = (registrationsPerDay) => {
         {
           label: 'Registrations per Day',
           data: data,
-          borderColor: '#3498db',
-          backgroundColor: 'rgba(52, 152, 219, 0.1)',
-          tension: 0.4,
+          borderColor: '#0f766e',
+          backgroundColor: (context) => {
+            const chart = context.chart;
+            const { ctx, chartArea } = chart;
+
+            if (!chartArea) {
+              return 'rgba(15, 118, 110, 0.18)';
+            }
+
+            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+            gradient.addColorStop(0, 'rgba(15, 118, 110, 0.32)');
+            gradient.addColorStop(1, 'rgba(15, 118, 110, 0.02)');
+            return gradient;
+          },
+          borderWidth: 3,
+          tension: 0.42,
           fill: true,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointBackgroundColor: '#fbf7f0',
+          pointBorderColor: '#0f766e',
+          pointBorderWidth: 2,
+          pointHoverBackgroundColor: '#0f766e',
+          pointHoverBorderColor: '#1d3557',
         },
       ],
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       plugins: {
         legend: {
           position: 'top',
+          labels: {
+            color: '#1d3557',
+            font: {
+              size: 12,
+              weight: '600',
+            },
+            boxWidth: 14,
+          },
         },
         title: {
           display: true,
           text: 'Registrations Over Time',
+          color: '#1d3557',
+          font: {
+            size: 16,
+            weight: '700',
+          },
+          padding: {
+            bottom: 14,
+          },
+        },
+        tooltip: {
+          backgroundColor: '#1d3557',
+          titleColor: '#ffffff',
+          bodyColor: '#e5ecf4',
+          borderColor: 'rgba(15, 118, 110, 0.4)',
+          borderWidth: 1,
+          padding: 12,
+          displayColors: false,
+          cornerRadius: 2,
         },
       },
       scales: {
+        x: {
+          grid: {
+            display: false,
+          },
+          ticks: {
+            color: '#607086',
+            maxRotation: 0,
+            autoSkip: true,
+          },
+          border: {
+            color: 'rgba(29, 53, 87, 0.14)',
+          },
+        },
         y: {
           beginAtZero: true,
+          ticks: {
+            color: '#607086',
+            precision: 0,
+            stepSize: 1,
+          },
+          grid: {
+            color: 'rgba(29, 53, 87, 0.08)',
+            drawBorder: false,
+          },
+          border: {
+            display: false,
+          },
         },
       },
     },
@@ -215,11 +288,11 @@ const drawPieChart = (approvalStats) => {
   const ctx = document.getElementById('pieChart');
   if (!ctx) return;
 
-  if (analyticsChart) {
-    analyticsChart.destroy();
+  if (analyticsPieChart) {
+    analyticsPieChart.destroy();
   }
 
-  analyticsChart = new Chart(ctx, {
+  analyticsPieChart = new Chart(ctx, {
     type: 'pie',
     data: {
       labels: ['Approved', 'Rejected', 'Pending'],
@@ -238,15 +311,42 @@ const drawPieChart = (approvalStats) => {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
+      layout: {
+        padding: {
+          top: 8,
+          right: 18,
+          bottom: 8,
+          left: 18,
+        },
+      },
       plugins: {
         legend: {
           position: 'top',
+          labels: {
+            color: '#1d3557',
+            font: {
+              size: 12,
+              weight: '600',
+            },
+            boxWidth: 12,
+            padding: 12,
+          },
         },
         title: {
           display: true,
           text: 'Registration Approval Status',
+          color: '#1d3557',
+          font: {
+            size: 16,
+            weight: '700',
+          },
+          padding: {
+            bottom: 12,
+          },
         },
       },
+      radius: '78%',
     },
   });
 };

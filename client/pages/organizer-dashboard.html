@@ -9,7 +9,7 @@
 </head>
 <body>
   <nav>
-    <h1>🎉 FlexHub - Organizer Dashboard</h1>
+    <h1>Organizer Dashboard</h1>
     <div>
       <a href="/">Home</a>
       <a href="/analytics">Analytics</a>
@@ -17,65 +17,57 @@
     <div id="nav-user-info"></div>
   </nav>
 
-  <div class="container">
-    <div class="dashboard-header">
-      <h1>Your Events</h1>
-      <button id="createEventBtn" class="btn-primary">+ Create New Event</button>
+  <div class="container page-shell">
+    <section class="hero glass-card" style="padding: 2.5rem;">
+      <div class="dashboard-header" style="margin-bottom: 0;">
+        <div>
+          <div class="hero-eyebrow">Organizer Workspace</div>
+          <h1 class="page-title" style="margin-bottom: 0.75rem;">Your events, approvals, and publishing flow.</h1>
+          <p class="page-subtitle">Manage every stage of your event pipeline from one focused dashboard.</p>
+        </div>
+        <button id="createEventBtn" class="btn-primary">Create New Event</button>
+      </div>
+    </section>
+
+    <div class="dashboard-stats">
+      <div class="stat-card">
+        <p>Total Events</p>
+        <p id="totalEventsCount">0</p>
+      </div>
+      <div class="stat-card">
+        <p>Total Registrations</p>
+        <p id="totalRegistrationsCount">0</p>
+      </div>
+      <div class="stat-card">
+        <p>Published Events</p>
+        <p id="publishedEventsCount">0</p>
+      </div>
+      <div class="stat-card">
+        <p>Pending Approvals</p>
+        <p id="pendingApprovalsCount">0</p>
+      </div>
     </div>
 
-    <!-- Summary Stats -->
-    <div class="dashboard-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-      <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid #3498db;">
-        <p style="color: #666; margin: 0 0 0.5rem 0; font-size: 0.9rem;">Total Events</p>
-        <p style="color: #3498db; font-size: 2rem; font-weight: bold; margin: 0;" id="totalEventsCount">0</p>
-      </div>
-      <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid #2ecc71;">
-        <p style="color: #666; margin: 0 0 0.5rem 0; font-size: 0.9rem;">Total Registrations</p>
-        <p style="color: #2ecc71; font-size: 2rem; font-weight: bold; margin: 0;" id="totalRegistrationsCount">0</p>
-      </div>
-      <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid #f39c12;">
-        <p style="color: #666; margin: 0 0 0.5rem 0; font-size: 0.9rem;">Published Events</p>
-        <p style="color: #f39c12; font-size: 2rem; font-weight: bold; margin: 0;" id="publishedEventsCount">0</p>
-      </div>
-      <div class="stat-card" style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 4px solid #9b59b6;">
-        <p style="color: #666; margin: 0 0 0.5rem 0; font-size: 0.9rem;">Pending Approvals</p>
-        <p style="color: #9b59b6; font-size: 2rem; font-weight: bold; margin: 0;" id="pendingApprovalsCount">0</p>
-      </div>
-    </div>
-
-    <!-- Tabs -->
-    <div class="tabs-nav" style="display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 2px solid #ecf0f1;">
-      <button class="tab-link active" onclick="switchOrganizerTab('all-events')" style="padding: 10px 20px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: 600; color: #666; transition: all 0.3s;">
+    <div class="tabs-nav">
+      <button class="tab-link active" onclick="switchOrganizerTab('all-events')">
         All Events
       </button>
-      <button class="tab-link" onclick="switchOrganizerTab('published')" style="padding: 10px 20px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: 600; color: #666; transition: all 0.3s;">
+      <button class="tab-link" onclick="switchOrganizerTab('published')">
         Published
       </button>
-      <button class="tab-link" onclick="switchOrganizerTab('drafts')" style="padding: 10px 20px; background: none; border: none; border-bottom: 3px solid transparent; cursor: pointer; font-weight: 600; color: #666; transition: all 0.3s;">
+      <button class="tab-link" onclick="switchOrganizerTab('drafts')">
         Drafts
       </button>
     </div>
 
     <div id="eventsContainer" class="events-grid">
-      <div style="text-align: center; grid-column: 1 / -1;">
+      <div class="panel text-center p-2" style="grid-column: 1 / -1;">
         <p>Loading events...</p>
       </div>
     </div>
   </div>
 
-  <!-- Registrations Modal -->
   <div id="registrationsModal" class="modal"></div>
-
-  <style>
-    .tab-link.active {
-      color: #3498db;
-      border-bottom-color: #3498db;
-    }
-
-    .tab-link:hover {
-      color: #3498db;
-    }
-  </style>
 
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
@@ -94,7 +86,6 @@
         const response = await eventAPI.getOrganizerEvents();
         allOrganizerEvents = response.events;
 
-        // Update stats
         updateOrganizerStats();
         displayOrganizerEvents(allOrganizerEvents);
         setupEventActionButtons();
@@ -107,10 +98,10 @@
       const total = allOrganizerEvents.length;
       const published = allOrganizerEvents.filter(e => e.isPublished).length;
       const drafts = total - published;
-      
+
       let pendingApprovals = 0;
       allOrganizerEvents.forEach(event => {
-        pendingApprovals += event.totalRegistrations; // This would need to be calculated properly
+        pendingApprovals += event.totalRegistrations;
       });
 
       document.getElementById('totalEventsCount').textContent = total;
@@ -121,14 +112,14 @@
 
     const switchOrganizerTab = (tabName) => {
       currentOrganizerTab = tabName;
-      
+
       document.querySelectorAll('.tab-link').forEach(link => {
         link.classList.remove('active');
       });
       event.target.classList.add('active');
 
       let filteredEvents = allOrganizerEvents;
-      
+
       if (tabName === 'published') {
         filteredEvents = allOrganizerEvents.filter(e => e.isPublished);
       } else if (tabName === 'drafts') {
@@ -140,9 +131,9 @@
 
     const displayOrganizerEvents = (events) => {
       const container = document.getElementById('eventsContainer');
-      
+
       if (events.length === 0) {
-        container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 2rem;"><p>No events to display. <a href="/create-event" style="color: #3498db;">Create your first event</a></p></div>';
+        container.innerHTML = '<div class="empty-state" style="grid-column: 1 / -1;"><h2>No events to display</h2><p><a href="/create-event">Create your first event</a></p></div>';
         return;
       }
 
@@ -161,13 +152,13 @@
               <p><strong>Date:</strong> ${eventDate}</p>
               <p><strong>Mode:</strong> ${event.eventMode.toUpperCase()}</p>
               <p><strong>Team Size:</strong> ${event.teamMinSize} - ${event.teamMaxSize}</p>
-              <p><strong>Registrations:</strong> <span style="color: #3498db; font-weight: bold;">${event.totalRegistrations}</span></p>
-              <p><strong>Fee:</strong> ₹${event.registrationFee}</p>
+              <p><strong>Registrations:</strong> ${event.totalRegistrations}</p>
+              <p><strong>Fee:</strong> Rs. ${event.registrationFee}</p>
               <div class="event-actions">
                 ${!event.isPublished ? `
                   <button class="btn-publish" onclick="publishEvent('${event._id}')">Publish</button>
                 ` : ''}
-                <button class="btn-view" onclick="viewEventRegistrations('${event._id}', '${event.title}')">View Registrations</button>
+                <button class="btn-view" onclick="viewEventRegistrations('${event._id}', '${event.title}')">Registrations</button>
                 <button class="btn-analytics" onclick="viewEventAnalytics('${event._id}', '${event.title}')">Analytics</button>
                 <button class="btn-edit" onclick="editEvent('${event._id}')">Edit</button>
                 <button class="btn-delete" onclick="deleteEvent('${event._id}')">Delete</button>
@@ -181,7 +172,7 @@
     const publishEvent = async (eventId) => {
       try {
         await eventAPI.publishEvent(eventId);
-        alert('Event published successfully! 🎉');
+        alert('Event published successfully!');
         setupOrganizerDashboard();
       } catch (error) {
         alert('Error publishing event: ' + error.message);
@@ -207,7 +198,7 @@
           <div class="modal-content">
             <span class="close" onclick="document.getElementById('registrationsModal').style.display='none'">&times;</span>
             <h2>Registrations for ${eventTitle}</h2>
-            <p style="text-align: center; color: #999;">No registrations yet.</p>
+            <p class="text-center" style="color: var(--text-muted);">No registrations yet.</p>
           </div>
         `;
       } else {
@@ -262,7 +253,7 @@
     const approveRegistration = async (registrationId) => {
       try {
         await registrationAPI.approveRegistration(registrationId);
-        alert('Registration approved! ✓');
+        alert('Registration approved!');
         document.getElementById('registrationsModal').style.display = 'none';
         setupOrganizerDashboard();
       } catch (error) {
@@ -273,7 +264,7 @@
     const rejectRegistration = async (registrationId) => {
       try {
         await registrationAPI.rejectRegistration(registrationId);
-        alert('Registration rejected! ✗');
+        alert('Registration rejected!');
         document.getElementById('registrationsModal').style.display = 'none';
         setupOrganizerDashboard();
       } catch (error) {
@@ -313,4 +304,3 @@
   </script>
 </body>
 </html>
-

@@ -8,7 +8,7 @@
 </head>
 <body>
   <nav>
-    <h1>🎉 FlexHub</h1>
+    <h1>FlexHub</h1>
     <div>
       <a href="/">Home</a>
       <a href="/browse-events">Browse Events</a>
@@ -18,122 +18,248 @@
     <div id="nav-user-info"></div>
   </nav>
 
-  <div class="container">
-    <div style="text-align: center; padding: 3rem 0;">
-      <h1 style="font-size: 3rem; color: #2c3e50; margin-bottom: 1rem;">Welcome to FlexHub</h1>
-      <p style="font-size: 1.3rem; color: #666; margin-bottom: 2rem;">
-        The Ultimate Event Management Platform for Student Organizers
-      </p>
-      <p style="font-size: 1.1rem; color: #888; margin-bottom: 2rem;">
-        Create, manage, and publish events with flexible registration structures.
-      </p>
-      
-      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a href="/browse-events" style="padding: 12px 24px; background-color: #3498db; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
-          Browse All Events
-        </a>
-        <a href="/register?role=organizer" style="padding: 12px 24px; background-color: #2ecc71; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
-          Create Events as Organizer
-        </a>
-        <a href="/register?role=participant" style="padding: 12px 24px; background-color: #9b59b6; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
-          Register for Events
-        </a>
-      </div>
-    </div>
+  <div class="container page-shell">
+    <section class="hero glass-card">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-eyebrow">Student Event Platform</div>
+          <h1>Run campus events with more energy and less admin.</h1>
+          <p>
+            FlexHub helps organizers launch polished events and gives participants a simpler way
+            to discover, join, and track every registration in one place.
+          </p>
 
-    <!-- Featured Events Section -->
-    <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 3rem;">
-      <h2 style="color: #2c3e50; text-align: center; margin-bottom: 2rem;">Featured Events</h2>
-      <div id="featuredEventsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; min-height: 200px;">
-        <p style="grid-column: 1 / -1; text-align: center;">Loading featured events...</p>
-      </div>
-      <div style="text-align: center; margin-top: 2rem;">
-        <a href="/browse-events" style="color: #3498db; text-decoration: none; font-weight: 600; font-size: 1.1rem;">
-          View All Events →
-        </a>
-      </div>
-    </div>
+          <div class="hero-actions">
+            <a href="/browse-events" class="cta-button btn-primary">Browse Events</a>
+            <a href="/register?role=organizer" class="cta-button btn-success">Start as Organizer</a>
+            <a href="/register?role=participant" class="cta-button btn-warning">Join as Participant</a>
+          </div>
 
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 3rem; margin-bottom: 3rem;">
-      <div style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center;">
-        <h3 style="color: #3498db; margin-bottom: 1rem;">For Organizers</h3>
-        <ul style="text-align: left; list-style: none;">
-          <li>✓ Create and manage events</li>
-          <li>✓ Flexible team size rules</li>
-          <li>✓ Registration management</li>
-          <li>✓ Analytics dashboard</li>
-          <li>✓ Revenue tracking</li>
-        </ul>
+          <div class="kpi-strip">
+            <div class="kpi-card">
+              <strong>Fast Setup</strong>
+              <span>Create and publish event pages in minutes.</span>
+            </div>
+            <div class="kpi-card">
+              <strong>Flexible Teams</strong>
+              <span>Support solo signups or group registrations smoothly.</span>
+            </div>
+            <div class="kpi-card">
+              <strong>Clear Tracking</strong>
+              <span>Monitor status, approvals, and payments in one flow.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-highlights">
+          <div class="highlight-card panel">
+            <strong>For Organizers</strong>
+            <span>Create draft events, publish when ready, and manage registrations from a central dashboard.</span>
+          </div>
+          <div class="highlight-card panel">
+            <strong>For Participants</strong>
+            <span>Discover new opportunities, register with your team, and keep tabs on approval and payment status.</span>
+          </div>
+          <div class="highlight-card panel">
+            <strong>Built for Momentum</strong>
+            <span>Responsive layouts, clear hierarchy, and a friendlier event experience across desktop and mobile.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <h2>Featured Events</h2>
+          <p>Browse a quick snapshot of what is trending on the platform right now.</p>
+        </div>
+        <div class="section-action-group">
+          <span class="section-note" id="eventsSectionNote">Showing top featured events</span>
+          <button type="button" id="toggleFeaturedEventsBtn" class="button-link btn-edit">View All Events</button>
+        </div>
       </div>
 
-      <div style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center;">
-        <h3 style="color: #2ecc71; margin-bottom: 1rem;">For Participants</h3>
-        <ul style="text-align: left; list-style: none;">
-          <li>✓ Discover events</li>
-          <li>✓ Register individually or in teams</li>
-          <li>✓ Track registration status</li>
-          <li>✓ Payment tracking</li>
-          <li>✓ Event details & guidelines</li>
-        </ul>
+      <div id="featuredEventsContainer" class="featured-grid">
+        <p class="panel text-center p-2" style="grid-column: 1 / -1;">Loading featured events...</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <h2>Why teams like FlexHub</h2>
+          <p>The platform keeps the workflow simple while still supporting the details organizers and participants care about.</p>
+        </div>
       </div>
 
-      <div style="background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center;">
-        <h3 style="color: #f39c12; margin-bottom: 1rem;">Platform Features</h3>
-        <ul style="text-align: left; list-style: none;">
-          <li>✓ JWT Authentication</li>
-          <li>✓ Role-based Access Control</li>
-          <li>✓ Secure file uploads</li>
-          <li>✓ Real-time analytics</li>
-          <li>✓ Responsive design</li>
-        </ul>
+      <div class="feature-grid">
+        <div class="feature-card panel">
+          <h3>Organizer Control</h3>
+          <ul class="feature-list">
+            <li>Create and manage events from a dedicated dashboard.</li>
+            <li>Configure team size rules and registration windows.</li>
+            <li>Review registrations and track engagement analytics.</li>
+            <li>Monitor payment-linked events without extra admin clutter.</li>
+          </ul>
+        </div>
+
+        <div class="feature-card panel">
+          <h3>Participant Experience</h3>
+          <ul class="feature-list">
+            <li>Discover published events through an organized browse view.</li>
+            <li>Register individually or as a team with a guided flow.</li>
+            <li>Track approval and payment status from one dashboard.</li>
+            <li>Access event details, rules, and organizer contact info easily.</li>
+          </ul>
+        </div>
+
+        <div class="feature-card panel">
+          <h3>Platform Foundation</h3>
+          <ul class="feature-list">
+            <li>Role-based access and JWT authentication.</li>
+            <li>Secure file uploads and payment support.</li>
+            <li>Reusable responsive UI for desktop and mobile.</li>
+            <li>Cleaner visual hierarchy for a more trustworthy experience.</li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </section>
   </div>
 
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
   <script>
+    let homepageEvents = [];
+    let showAllFeaturedEvents = false;
+
     document.addEventListener('DOMContentLoaded', () => {
       updateNavigation();
       if (isLoggedIn()) {
         redirectIfLoggedIn();
       }
+      setupFeaturedEventsToggle();
       loadFeaturedEvents();
     });
+
+    const setupFeaturedEventsToggle = () => {
+      const toggleBtn = document.getElementById('toggleFeaturedEventsBtn');
+      if (!toggleBtn) return;
+
+      toggleBtn.addEventListener('click', () => {
+        showAllFeaturedEvents = !showAllFeaturedEvents;
+        renderFeaturedEvents();
+
+        if (showAllFeaturedEvents) {
+          document.getElementById('featuredEventsContainer')?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+        }
+      });
+    };
 
     const loadFeaturedEvents = async () => {
       try {
         const response = await eventAPI.getAllPublishedEvents('', '', 'trending');
-        const featuredEvents = response.events.slice(0, 3); // Show top 3
-        
-        const container = document.getElementById('featuredEventsContainer');
-        
-        if (featuredEvents.length === 0) {
-          container.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #999;">No events available yet. Check back soon!</p>';
-          return;
-        }
-
-        container.innerHTML = featuredEvents
-          .map((event) => {
-            const eventDate = new Date(event.eventDateTime);
-            const formattedDate = eventDate.toLocaleDateString('en-US', {
-              month: 'short',
-              day: 'numeric',
-            });
-            return `
-              <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #3498db; cursor: pointer; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='none'; this.style.boxShadow='none'" onclick="window.location.href='/browse-events'">
-                <h3 style="color: #2c3e50; font-size: 1.1rem; margin-bottom: 0.5rem;">${event.title}</h3>
-                <p style="color: #666; font-size: 0.9rem; margin: 0.3rem 0;">📅 ${formattedDate} | 👥 ${event.teamMinSize}-${event.teamMaxSize} members</p>
-                <p style="color: #888; font-size: 0.85rem; margin: 0.5rem 0 0 0;">By: ${event.organizer.name}</p>
-              </div>
-            `;
-          })
-          .join('');
+        homepageEvents = response.events;
+        renderFeaturedEvents();
       } catch (error) {
         console.error('Error loading featured events:', error);
-        document.getElementById('featuredEventsContainer').innerHTML = 
-          '<p style="grid-column: 1 / -1; text-align: center; color: red;">Error loading events</p>';
+        document.getElementById('featuredEventsContainer').innerHTML =
+          '<p class="panel text-center p-2" style="grid-column: 1 / -1; color: #9f1239;">Error loading events</p>';
       }
+    };
+
+    const renderFeaturedEvents = () => {
+      const container = document.getElementById('featuredEventsContainer');
+      const toggleBtn = document.getElementById('toggleFeaturedEventsBtn');
+      const sectionNote = document.getElementById('eventsSectionNote');
+      if (!container || !toggleBtn || !sectionNote) return;
+
+      if (homepageEvents.length === 0) {
+        container.innerHTML =
+          '<p class="panel text-center p-2" style="grid-column: 1 / -1;">No events available yet. Check back soon.</p>';
+        toggleBtn.style.display = 'none';
+        sectionNote.textContent = 'No published events yet';
+        return;
+      }
+
+      const visibleEvents = showAllFeaturedEvents ? homepageEvents : homepageEvents.slice(0, 3);
+      toggleBtn.style.display = homepageEvents.length > 3 ? 'inline-flex' : 'none';
+      toggleBtn.textContent = showAllFeaturedEvents ? 'Show Less' : 'View All Events';
+      sectionNote.textContent = showAllFeaturedEvents
+        ? `Showing all ${homepageEvents.length} events`
+        : `Showing top ${visibleEvents.length} featured events`;
+
+      container.innerHTML = visibleEvents
+        .map((event) => {
+          const eventDate = new Date(event.eventDateTime);
+          const formattedDate = eventDate.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          });
+          const formattedTime = eventDate.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+          const shortDescription = event.description && event.description.trim()
+            ? event.description.trim()
+            : 'Explore this event and see if it matches your team, timing, and format.';
+
+          return `
+            <article class="featured-event-card panel">
+              <div class="featured-event-visual">
+                ${event.bannerImage
+                  ? `<img class="featured-event-banner" src="${event.bannerImage}" alt="${event.title}">`
+                  : `<div class="featured-event-banner" style="display:flex; align-items:center; justify-content:center; color:white; font-size:1.1rem; font-weight:700;">FlexHub Event</div>`
+                }
+                <div class="featured-event-badge-row">
+                  <span class="featured-event-mode">${event.eventMode.toUpperCase()}</span>
+                  <span class="featured-event-date">${formattedDate}</span>
+                </div>
+              </div>
+              <div class="featured-event-content">
+                <div class="featured-event-topline">
+                  <h3>${event.title}</h3>
+                  <span class="featured-event-fee">${event.registrationFee > 0 ? `Rs. ${event.registrationFee}` : 'Free'}</span>
+                </div>
+                <p class="featured-event-description">${shortDescription}</p>
+                <div class="featured-event-meta-grid">
+                  <div class="featured-event-meta">
+                    <strong>Schedule</strong>
+                    <span>${formattedTime}</span>
+                  </div>
+                  <div class="featured-event-meta">
+                    <strong>Team Size</strong>
+                    <span>${event.teamMinSize}-${event.teamMaxSize} members</span>
+                  </div>
+                </div>
+                <div class="featured-event-organizer">
+                  <strong>Organizer:</strong> ${event.organizer.name}
+                </div>
+                <div class="featured-event-actions">
+                  <button type="button" class="btn-primary" onclick="goToFeaturedEvent('${event.slug}')">View Event</button>
+                  <button type="button" class="btn-edit" onclick="goToBrowseEvents()">Browse More</button>
+                </div>
+              </div>
+            </article>
+          `;
+        })
+        .join('');
+    };
+
+    const goToFeaturedEvent = (slug) => {
+      if (isLoggedIn()) {
+        window.location.href = `/event-details?slug=${slug}`;
+      } else {
+        window.location.href = `/login?redirect=/event-details?slug=${slug}`;
+      }
+    };
+
+    const goToBrowseEvents = () => {
+      window.location.href = '/browse-events';
     };
   </script>
 </body>

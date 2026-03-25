@@ -8,7 +8,7 @@
 </head>
 <body>
   <nav>
-    <h1>🎉 FlexHub</h1>
+    <h1>FlexHub</h1>
     <div>
       <a href="/">Home</a>
       <a href="/browse-events">Browse Events</a>
@@ -17,27 +17,40 @@
   </nav>
 
   <div class="container">
-    <form id="loginForm" style="max-width: 500px;">
-      <h1 style="text-align: center; color: #2c3e50; margin-bottom: 1.5rem;">Login to FlexHub</h1>
+    <div class="auth-shell">
+      <form id="loginForm" class="auth-panel glass-card" style="max-width: none;">
+        <h1>Welcome back</h1>
+        <p>Log in to manage events, review registrations, or continue your participant journey.</p>
 
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" required placeholder="your@email.com">
-      </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="your@email.com">
+        </div>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required placeholder="Enter your password">
-      </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required placeholder="Enter your password">
+        </div>
 
-      <button type="submit" class="btn-primary" style="width: 100%; padding: 12px; font-size: 1.1rem;">
-        Login
-      </button>
+        <button type="submit" class="btn-primary" style="width: 100%;">
+          Login
+        </button>
 
-      <p style="text-align: center; margin-top: 1rem;">
-        Don't have an account? <a href="/register" style="color: #3498db; text-decoration: none; font-weight: 600;">Register here</a>
-      </p>
-    </form>
+        <p class="auth-footer">
+          Don't have an account? <a href="/register">Register here</a>
+        </p>
+      </form>
+
+      <aside class="auth-aside glass-card">
+        <h2>Everything in one flow.</h2>
+        <p>From event discovery to approvals and payments, FlexHub keeps the experience clear and organized.</p>
+        <ul class="auth-points">
+          <li>Switch between organizer and participant journeys seamlessly.</li>
+          <li>Track event registrations and status updates from your dashboard.</li>
+          <li>Use a cleaner, more focused interface across desktop and mobile.</li>
+        </ul>
+      </aside>
+    </div>
   </div>
 
   <script src="/js/api.js"></script>
@@ -57,7 +70,7 @@
           const response = await authAPI.login({ email, password });
           setLoggedInUser(response.user, response.token);
           alert('Login successful!');
-          
+
           const user = response.user;
           if (user.role === 'organizer') {
             window.location.href = '/organizer-dashboard';

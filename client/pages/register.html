@@ -8,7 +8,7 @@
 </head>
 <body>
   <nav>
-    <h1>🎉 FlexHub</h1>
+    <h1>FlexHub</h1>
     <div>
       <a href="/">Home</a>
       <a href="/browse-events">Browse Events</a>
@@ -17,46 +17,59 @@
   </nav>
 
   <div class="container">
-    <form id="registerForm" style="max-width: 500px;">
-      <h1 style="text-align: center; color: #2c3e50; margin-bottom: 1.5rem;">Join FlexHub</h1>
+    <div class="auth-shell">
+      <form id="registerForm" class="auth-panel glass-card" style="max-width: none;">
+        <h1>Join FlexHub</h1>
+        <p>Create your account to launch events, register with your team, and track progress with less friction.</p>
 
-      <div class="form-group">
-        <label for="name">Full Name</label>
-        <input type="text" id="name" name="name" required placeholder="Your full name">
-      </div>
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" required placeholder="Your full name">
+        </div>
 
-      <div class="form-group">
-        <label for="email">Email Address</label>
-        <input type="email" id="email" name="email" required placeholder="your@email.com">
-      </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="your@email.com">
+        </div>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required placeholder="Minimum 6 characters">
-      </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required placeholder="Minimum 6 characters">
+        </div>
 
-      <div class="form-group">
-        <label for="college">College/University (Optional)</label>
-        <input type="text" id="college" name="college" placeholder="Your college name">
-      </div>
+        <div class="form-group">
+          <label for="college">College/University (Optional)</label>
+          <input type="text" id="college" name="college" placeholder="Your college name">
+        </div>
 
-      <div class="form-group">
-        <label for="role">I want to register as:</label>
-        <select id="role" name="role" required>
-          <option value="">Select your role</option>
-          <option value="organizer">Organizer (Create and manage events)</option>
-          <option value="participant">Participant (Join events)</option>
-        </select>
-      </div>
+        <div class="form-group">
+          <label for="role">I want to register as</label>
+          <select id="role" name="role" required>
+            <option value="">Select your role</option>
+            <option value="organizer">Organizer (Create and manage events)</option>
+            <option value="participant">Participant (Join events)</option>
+          </select>
+        </div>
 
-      <button type="submit" class="btn-success" style="width: 100%; padding: 12px; font-size: 1.1rem;">
-        Create Account
-      </button>
+        <button type="submit" class="btn-success" style="width: 100%;">
+          Create Account
+        </button>
 
-      <p style="text-align: center; margin-top: 1rem;">
-        Already have an account? <a href="/login" style="color: #3498db; text-decoration: none; font-weight: 600;">Login here</a>
-      </p>
-    </form>
+        <p class="auth-footer">
+          Already have an account? <a href="/login">Login here</a>
+        </p>
+      </form>
+
+      <aside class="auth-aside glass-card">
+        <h2>Designed for active campus communities.</h2>
+        <p>Choose the role that fits you now and keep the same smooth event experience across the platform.</p>
+        <ul class="auth-points">
+          <li>Organizers get event creation, publishing, and analytics tools.</li>
+          <li>Participants can discover, register, and track status updates quickly.</li>
+          <li>The interface stays focused without changing the underlying workflow.</li>
+        </ul>
+      </aside>
+    </div>
   </div>
 
   <script src="/js/api.js"></script>
@@ -65,7 +78,6 @@
     document.addEventListener('DOMContentLoaded', () => {
       redirectIfLoggedIn();
 
-      // Set role from URL params if present
       const urlParams = new URLSearchParams(window.location.search);
       const roleParam = urlParams.get('role');
       if (roleParam && (roleParam === 'organizer' || roleParam === 'participant')) {
@@ -97,7 +109,7 @@
           });
           setLoggedInUser(response.user, response.token);
           alert('Registration successful!');
-          
+
           if (role === 'organizer') {
             window.location.href = '/organizer-dashboard';
           } else {
