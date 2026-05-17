@@ -38,6 +38,11 @@
           <input type="number" id="teamSize" name="teamSize" required min="1" max="10" placeholder="1">
         </div>
 
+        <div class="form-group">
+          <label for="leaderContactNo">Team Leader Contact Number *</label>
+          <input type="tel" id="leaderContactNo" name="leaderContactNo" required placeholder="Enter leader contact number">
+        </div>
+
         <div id="teamMembersContainer" class="team-members-container">
         </div>
 
@@ -48,6 +53,7 @@
 
   <script src="/js/api.js"></script>
   <script src="/js/auth.js"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script>
     let currentEvent = null;
 
@@ -104,6 +110,7 @@
             <p><strong>Registration Deadline</strong>${deadlineDate}</p>
             <p><strong>Team Size</strong>${event.teamMinSize} - ${event.teamMaxSize} members</p>
             <p><strong>Registration Fee</strong>Rs. ${event.registrationFee}</p>
+            <p><strong>Organizer Contact</strong>${event.organizerContactNo}</p>
           </div>
 
           <div class="event-info">
@@ -129,6 +136,7 @@
           <div class="organizer-info">
             <h4>Organized by ${event.organizer.name}</h4>
             <p>Email: ${event.organizer.email}</p>
+            <p>Contact: ${event.organizerContactNo}</p>
           </div>
         </div>
       `;
@@ -153,9 +161,17 @@
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
 
         const teamName = document.getElementById('teamName').value;
         const teamSize = parseInt(document.getElementById('teamSize').value);
+        const leaderContactNo = document.getElementById('leaderContactNo').value.trim();
+
+        if (!leaderContactNo) {
+          alert('Please enter the team leader contact number');
+          return;
+        }
 
         if (teamSize < event.teamMinSize || teamSize > event.teamMaxSize) {
           alert(`Team size must be between ${event.teamMinSize} and ${event.teamMaxSize}`);
@@ -178,23 +194,62 @@
         const registrationData = {
           eventSlug: event.slug,
           teamName,
+          leaderContactNo,
           teamMembers,
         };
 
         try {
-          const submitBtn = e.target.querySelector('button[type="submit"]');
-          const originalText = submitBtn.textContent;
           submitBtn.textContent = 'Processing...';
           submitBtn.disabled = true;
 
           if (event.registrationFee > 0) {
             const checkoutResponse = await paymentAPI.createCheckoutSession(registrationData);
+            const options = {
+              key: checkoutResponse.key,
+              amount: checkoutResponse.amount,
+              currency: checkoutResponse.currency,
+              name: 'FlexHub',
+              description: `${checkoutResponse.eventTitle} registration`,
+              order_id: checkoutResponse.orderId,
+              handler: async function (response) {
+                try {
+                  await paymentAPI.verifyPayment(response);
+                  window.location.href = `/payment-success?order_id=${encodeURIComponent(checkoutResponse.orderId)}`;
+                } catch (verificationError) {
+                  alert('Payment received but verification failed: ' + verificationError.message);
+                  submitBtn.textContent = originalText;
+                  submitBtn.disabled = false;
+                }
+              },
+              prefill: {
+                name: checkoutResponse.participant.name,
+                email: checkoutResponse.participant.email,
+              },
+              notes: {
+                registrationId: checkoutResponse.registrationId,
+              },
+              theme: {
+                color: '#2563eb',
+              },
+              modal: {
+                ondismiss: function () {
+                  submitBtn.textContent = originalText;
+                  submitBtn.disabled = false;
+                },
+              },
+            };
 
-            if (checkoutResponse.checkoutUrl) {
-              window.location.href = checkoutResponse.checkoutUrl;
-            } else {
-              throw new Error('Failed to create payment session');
-            }
+            const razorpay = new Razorpay(options);
+            razorpay.on('payment.failed', function (response) {
+              const description =
+                response.error && response.error.description
+                  ? response.error.description
+                  : 'Payment failed';
+              alert(description);
+              submitBtn.textContent = originalText;
+              submitBtn.disabled = false;
+            });
+            razorpay.open();
           } else {
             await registrationAPI.registerForEvent(registrationData);
             alert('Registration successful! Check your dashboard for status.');
@@ -203,7 +258,6 @@
         } catch (error) {
           console.error('Registration error:', error);
           alert('Error processing registration: ' + error.message);
-          const submitBtn = e.target.querySelector('button[type="submit"]');
           submitBtn.textContent = originalText;
           submitBtn.disabled = false;
         }

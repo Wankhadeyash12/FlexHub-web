@@ -4,10 +4,16 @@ const Event = require('../models/Event');
 // Register for event
 const registerForEvent = async (req, res) => {
   try {
-    const { eventSlug, teamName, teamMembers } = req.body;
+    const { eventSlug, teamName, leaderContactNo, teamMembers } = req.body;
 
     // Validation
-    if (!eventSlug || !teamName || !teamMembers || teamMembers.length === 0) {
+    if (
+      !eventSlug ||
+      !teamName ||
+      !leaderContactNo ||
+      !teamMembers ||
+      teamMembers.length === 0
+    ) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
@@ -48,15 +54,17 @@ const registerForEvent = async (req, res) => {
       event: event._id,
       participant: req.user.id,
       teamName,
+      leaderContactNo: leaderContactNo.trim(),
       teamMembers,
       registrationFee: event.registrationFee,
     });
 
     await registration.save();
 
-    // Update total registrations count
-    event.totalRegistrations += 1;
-    await event.save();
+    // Update total registrations count without re-validating older event documents
+    await Event.findByIdAndUpdate(event._id, {
+      $inc: { totalRegistrations: 1 },
+    });
 
     res.status(201).json({
       message: 'Registered successfully',
@@ -74,7 +82,7 @@ const getParticipantRegistrations = async (req, res) => {
     const registrations = await Registration.find({
       participant: req.user.id,
     })
-      .populate('event', 'title slug eventDateTime')
+      .populate('event', 'title slug eventDateTime organizerContactNo')
       .populate('participant', 'name email');
 
     res.json({

@@ -12,6 +12,7 @@ const createEvent = async (req, res) => {
       eventMode,
       venue,
       meetingLink,
+      organizerContactNo,
       eventDateTime,
       registrationDeadline,
       teamMinSize,
@@ -24,6 +25,7 @@ const createEvent = async (req, res) => {
       !title ||
       !description ||
       !eventMode ||
+      !organizerContactNo ||
       !eventDateTime ||
       !registrationDeadline ||
       !teamMinSize ||
@@ -50,6 +52,7 @@ const createEvent = async (req, res) => {
       eventMode,
       venue: venue || '',
       meetingLink: meetingLink || '',
+      organizerContactNo: organizerContactNo.trim(),
       eventDateTime,
       registrationDeadline,
       teamMinSize: parseInt(teamMinSize),
@@ -124,6 +127,7 @@ const updateEvent = async (req, res) => {
       eventMode,
       venue,
       meetingLink,
+      organizerContactNo,
       eventDateTime,
       registrationDeadline,
       teamMinSize,
@@ -148,6 +152,7 @@ const updateEvent = async (req, res) => {
     if (eventMode) event.eventMode = eventMode;
     if (venue) event.venue = venue;
     if (meetingLink) event.meetingLink = meetingLink;
+    if (organizerContactNo) event.organizerContactNo = organizerContactNo.trim();
     if (eventDateTime) event.eventDateTime = eventDateTime;
     if (registrationDeadline) event.registrationDeadline = registrationDeadline;
     if (teamMinSize) event.teamMinSize = parseInt(teamMinSize);

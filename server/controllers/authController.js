@@ -12,9 +12,10 @@ const generateToken = (user) => {
 const register = async (req, res) => {
   try {
     const { name, email, password, role, college } = req.body;
+    const normalizedEmail = email ? email.trim().toLowerCase() : '';
 
     // Validation
-    if (!name || !email || !password || !role) {
+    if (!name || !normalizedEmail || !password || !role) {
       return res.status(400).json({ message: 'All fields are required' });
     }
 
@@ -23,7 +24,7 @@ const register = async (req, res) => {
     }
 
     // Check if user already exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
       return res.status(409).json({ message: 'User already exists' });
     }
@@ -31,7 +32,7 @@ const register = async (req, res) => {
     // Create new user
     const user = new User({
       name,
-      email,
+      email: normalizedEmail,
       password,
       role,
       college: college || '',
@@ -61,14 +62,15 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    const normalizedEmail = email ? email.trim().toLowerCase() : '';
 
     // Validation
-    if (!email || !password) {
+    if (!normalizedEmail || !password) {
       return res.status(400).json({ message: 'Email and password are required' });
     }
 
-    // Find user
-    const user = await User.findOne({ email });
+    // Find user using the exact registered email after normalization
+    const user = await User.findOne({ email: normalizedEmail });
     if (!user) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }

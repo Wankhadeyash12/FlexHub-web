@@ -35,6 +35,11 @@ const eventSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    organizerContactNo: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     eventDateTime: {
       type: Date,
       required: true,

@@ -145,30 +145,11 @@
     const verifyPayment = async () => {
       try {
         const urlParams = new URLSearchParams(window.location.search);
-        const sessionId = urlParams.get('session_id');
+        const sessionId = urlParams.get('order_id');
 
         if (!sessionId) {
-          showError('Session ID not found');
+          showError('Order ID not found');
           return;
-        }
-
-        console.log('Completing payment for session:', sessionId);
-        const completeResponse = await fetch(
-          '/api/payments/complete-payment',
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-            body: JSON.stringify({ sessionId }),
-          }
-        );
-
-        if (!completeResponse.ok) {
-          console.warn('Failed to complete payment in database:', await completeResponse.text());
-        } else {
-          console.log('Payment completed successfully in database');
         }
 
         const response = await fetch(

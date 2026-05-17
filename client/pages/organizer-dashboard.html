@@ -154,6 +154,7 @@
               <p><strong>Team Size:</strong> ${event.teamMinSize} - ${event.teamMaxSize}</p>
               <p><strong>Registrations:</strong> ${event.totalRegistrations}</p>
               <p><strong>Fee:</strong> Rs. ${event.registrationFee}</p>
+              <p><strong>Support Contact:</strong> ${event.organizerContactNo}</p>
               <div class="event-actions">
                 ${!event.isPublished ? `
                   <button class="btn-publish" onclick="publishEvent('${event._id}')">Publish</button>
@@ -208,6 +209,7 @@
               <td>${reg.participant.name}</td>
               <td>${reg.participant.email}</td>
               <td>${reg.teamName}</td>
+              <td>${reg.leaderContactNo || '-'}</td>
               <td>${reg.teamMembers.length}</td>
               <td><span class="status status-${reg.approvalStatus.toLowerCase()}">${reg.approvalStatus}</span></td>
               <td><span class="status status-${reg.paymentStatus.toLowerCase()}">${reg.paymentStatus}</span></td>
@@ -232,6 +234,7 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Team Name</th>
+                    <th>Leader Contact</th>
                     <th>Team Size</th>
                     <th>Approval</th>
                     <th>Payment</th>

@@ -177,6 +177,10 @@
                   <p>Payment Status</p>
                   <span class="status-value ${paymentClass}">${reg.paymentStatus}</span>
                 </div>
+                <div class="status-item">
+                  <p>Leader Contact</p>
+                  <div style="font-weight: 700; color: var(--secondary-color);">${reg.leaderContactNo || '-'}</div>
+                </div>
               </div>
 
               <div class="team-details">
@@ -190,6 +194,7 @@
 
               <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(35, 48, 65, 0.08); color: var(--text-soft);">
                 <small>Event Date: ${eventDate}</small>
+                <br><small>Organizer Help: ${reg.event.organizerContactNo || 'Not provided'}</small>
                 ${reg.registrationFee > 0 ? `<br><small>Fee: Rs. ${reg.registrationFee}</small>` : ''}
               </div>
             </div>
@@ -274,7 +279,8 @@
                 </div>
 
                 <div class="event-organizer">
-                  <strong>Organizer:</strong> ${event.organizer.name}
+                  <strong>Organizer:</strong> ${event.organizer.name}<br>
+                  <small>Help Line: ${event.organizerContactNo || 'Not provided'}</small>
                 </div>
 
                 <div class="event-actions-browse">

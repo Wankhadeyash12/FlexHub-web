@@ -4,9 +4,8 @@ const authMiddleware = require('../middleware/authMiddleware');
 const roleMiddleware = require('../middleware/roleMiddleware');
 const {
   createCheckoutSession,
-  handleWebhook,
+  verifyPayment,
   getPaymentSessionDetails,
-  completePaymentManually,
 } = require('../controllers/paymentController');
 
 // Create checkout session (requires authentication as participant)
@@ -25,15 +24,12 @@ router.get(
   getPaymentSessionDetails
 );
 
-// Complete payment manually (for local testing)
+// Verify Razorpay payment (requires authentication as participant)
 router.post(
-  '/complete-payment',
+  '/verify-payment',
   authMiddleware,
   roleMiddleware(['participant']),
-  completePaymentManually
+  verifyPayment
 );
-
-// Stripe webhook (no auth needed, raw body required)
-router.post('/webhook', express.raw({ type: 'application/json' }), handleWebhook);
 
 module.exports = router;

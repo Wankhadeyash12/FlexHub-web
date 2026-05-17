@@ -17,6 +17,11 @@ const registrationSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    leaderContactNo: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     teamMembers: [
       {
         name: {
@@ -43,11 +48,15 @@ const registrationSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    stripeSessionId: {
+    razorpayOrderId: {
       type: String,
       default: null,
     },
-    stripePaymentIntentId: {
+    razorpayPaymentId: {
+      type: String,
+      default: null,
+    },
+    razorpaySignature: {
       type: String,
       default: null,
     },

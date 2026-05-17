@@ -19,6 +19,7 @@ const setupCreateEventForm = () => {
       eventMode: document.getElementById('eventMode').value,
       venue: document.getElementById('venue').value,
       meetingLink: document.getElementById('meetingLink').value,
+      organizerContactNo: document.getElementById('organizerContactNo').value.trim(),
       eventDateTime: document.getElementById('eventDateTime').value,
       registrationDeadline: document.getElementById('registrationDeadline').value,
       teamMinSize: document.getElementById('teamMinSize').value,

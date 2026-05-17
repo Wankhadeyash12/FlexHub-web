@@ -1,5 +1,5 @@
 // API Configuration
-const API_BASE_URL = 'http://localhost:3000/api';
+const API_BASE_URL = '/api';
 
 // Helper function to get token from localStorage
 const getToken = () => {
@@ -104,10 +104,10 @@ const registrationAPI = {
 const paymentAPI = {
   createCheckoutSession: (registrationData) =>
     apiCall('/payments/create-checkout-session', 'POST', registrationData),
+  verifyPayment: (paymentData) =>
+    apiCall('/payments/verify-payment', 'POST', paymentData),
   getSessionDetails: (sessionId) =>
     apiCall(`/payments/session-details?sessionId=${sessionId}`),
-  completePayment: (sessionId) =>
-    apiCall('/payments/complete-payment', 'POST', { sessionId }),
 };
 
 // Analytics APIs

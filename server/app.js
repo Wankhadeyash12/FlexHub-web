@@ -19,12 +19,6 @@ connectDB();
 // Middleware
 app.use(cors());
 
-// Webhook handling middleware (raw body, must be before JSON parser)
-app.use('/api/payments/webhook', express.raw({ type: 'application/json' }), (req, res, next) => {
-  req.rawBody = req.body;
-  next();
-});
-
 // JSON parser for other requests
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -95,8 +89,4 @@ app.use((err, req, res, next) => {
   res.status(500).json({ message: 'Internal server error' });
 });
 
-// Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 FlexHub Server running on port ${PORT}`);
-});
+module.exports = app;
