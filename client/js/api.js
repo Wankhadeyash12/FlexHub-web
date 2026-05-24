@@ -1,5 +1,14 @@
 // API Configuration
-const API_BASE_URL = '/api';
+const resolveApiBaseUrl = () => {
+  if (typeof window !== 'undefined' && window.__API_BASE_URL__) return window.__API_BASE_URL__;
+  if (typeof document !== 'undefined') {
+    const meta = document.querySelector('meta[name="api-base-url"]');
+    if (meta && meta.content) return meta.content;
+  }
+  return '/api';
+};
+
+const API_BASE_URL = resolveApiBaseUrl();
 
 // Helper function to get token from localStorage
 const getToken = () => {
@@ -32,10 +41,19 @@ const apiCall = async (endpoint, method = 'GET', body = null, isFormData = false
 
   try {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
-    const data = await response.json();
+
+    const contentType = response.headers.get('content-type') || '';
+    let data;
+
+    if (contentType.includes('application/json')) {
+      data = await response.json();
+    } else {
+      const text = await response.text();
+      data = { message: text };
+    }
 
     if (!response.ok) {
-      throw new Error(data.message || 'API request failed');
+      throw new Error(data.message || `API request failed (status ${response.status})`);
     }
 
     return data;
