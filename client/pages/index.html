@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlexHub - Event Management Platform</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav>
+    <h1>FlexHub</h1>
+    <div>
+      <a href="/">Home</a>
+      <a href="/browse-events">Browse Events</a>
+      <a href="/login">Login</a>
+      <a href="/register">Register</a>
+    </div>
+    <div id="nav-user-info"></div>
+  </nav>
+
+  <div class="container page-shell">
+    <section class="hero glass-card">
+      <div class="hero-grid">
+        <div>
+          <div class="hero-eyebrow">Student Event Platform</div>
+          <h1>Run campus events with more energy and less admin.</h1>
+          <p>
+            FlexHub helps organizers launch polished events and gives participants a simpler way
+            to discover, join, and track every registration in one place.
+          </p>
+
+          <div class="hero-actions">
+            <a href="/browse-events" class="cta-button btn-primary">Browse Events</a>
+            <a href="/register?role=organizer" class="cta-button btn-success">Start as Organizer</a>
+            <a href="/register?role=participant" class="cta-button btn-warning">Join as Participant</a>
+          </div>
+
+          <div class="kpi-strip">
+            <div class="kpi-card">
+              <strong>Fast Setup</strong>
+              <span>Create and publish event pages in minutes.</span>
+            </div>
+            <div class="kpi-card">
+              <strong>Flexible Teams</strong>
+              <span>Support solo signups or group registrations smoothly.</span>
+            </div>
+            <div class="kpi-card">
+              <strong>Clear Tracking</strong>
+              <span>Monitor status, approvals, and payments in one flow.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-highlights">
+          <div class="highlight-card panel">
+            <strong>For Organizers</strong>
+            <span>Create draft events, publish when ready, and manage registrations from a central dashboard.</span>
+          </div>
+          <div class="highlight-card panel">
+            <strong>For Participants</strong>
+            <span>Discover new opportunities, register with your team, and keep tabs on approval and payment status.</span>
+          </div>
+          <div class="highlight-card panel">
+            <strong>Built for Momentum</strong>
+            <span>Responsive layouts, clear hierarchy, and a friendlier event experience across desktop and mobile.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <h2>Featured Events</h2>
+          <p>Browse a quick snapshot of what is trending on the platform right now.</p>
+        </div>
+        <div class="section-action-group">
+          <span class="section-note" id="eventsSectionNote">Showing top featured events</span>
+          <button type="button" id="toggleFeaturedEventsBtn" class="button-link btn-edit">View All Events</button>
+        </div>
+      </div>
+
+      <div id="featuredEventsContainer" class="featured-grid">
+        <p class="panel text-center p-2" style="grid-column: 1 / -1;">Loading featured events...</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-heading">
+        <div>
+          <h2>Why teams like FlexHub</h2>
+          <p>The platform keeps the workflow simple while still supporting the details organizers and participants care about.</p>
+        </div>
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature-card panel">
+          <h3>Organizer Control</h3>
+          <ul class="feature-list">
+            <li>Create and manage events from a dedicated dashboard.</li>
+            <li>Configure team size rules and registration windows.</li>
+            <li>Review registrations and track engagement analytics.</li>
+            <li>Monitor payment-linked events without extra admin clutter.</li>
+          </ul>
+        </div>
+
+        <div class="feature-card panel">
+          <h3>Participant Experience</h3>
+          <ul class="feature-list">
+            <li>Discover published events through an organized browse view.</li>
+            <li>Register individually or as a team with a guided flow.</li>
+            <li>Track approval and payment status from one dashboard.</li>
+            <li>Access event details, rules, and organizer contact info easily.</li>
+          </ul>
+        </div>
+
+        <div class="feature-card panel">
+          <h3>Platform Foundation</h3>
+          <ul class="feature-list">
+            <li>Role-based access and JWT authentication.</li>
+            <li>Secure file uploads and payment support.</li>
+            <li>Reusable responsive UI for desktop and mobile.</li>
+            <li>Cleaner visual hierarchy for a more trustworthy experience.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script>
+    let homepageEvents = [];
+    let showAllFeaturedEvents = false;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      updateNavigation();
+      if (isLoggedIn()) {
+        redirectIfLoggedIn();
+      }
+      setupFeaturedEventsToggle();
+      loadFeaturedEvents();
+    });
+
+    const setupFeaturedEventsToggle = () => {
+      const toggleBtn = document.getElementById('toggleFeaturedEventsBtn');
+      if (!toggleBtn) return;
+
+      toggleBtn.addEventListener('click', () => {
+        showAllFeaturedEvents = !showAllFeaturedEvents;
+        renderFeaturedEvents();
+
+        if (showAllFeaturedEvents) {
+          document.getElementById('featuredEventsContainer')?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+          });
+        }
+      });
+    };
+
+    const loadFeaturedEvents = async () => {
+      try {
+        const response = await eventAPI.getAllPublishedEvents('', '', 'trending');
+        homepageEvents = response.events;
+        renderFeaturedEvents();
+      } catch (error) {
+        console.error('Error loading featured events:', error);
+        document.getElementById('featuredEventsContainer').innerHTML =
+          '<p class="panel text-center p-2" style="grid-column: 1 / -1; color: #9f1239;">Error loading events</p>';
+      }
+    };
+
+    const renderFeaturedEvents = () => {
+      const container = document.getElementById('featuredEventsContainer');
+      const toggleBtn = document.getElementById('toggleFeaturedEventsBtn');
+      const sectionNote = document.getElementById('eventsSectionNote');
+      if (!container || !toggleBtn || !sectionNote) return;
+
+      if (homepageEvents.length === 0) {
+        container.innerHTML =
+          '<p class="panel text-center p-2" style="grid-column: 1 / -1;">No events available yet. Check back soon.</p>';
+        toggleBtn.style.display = 'none';
+        sectionNote.textContent = 'No published events yet';
+        return;
+      }
+
+      const visibleEvents = showAllFeaturedEvents ? homepageEvents : homepageEvents.slice(0, 3);
+      toggleBtn.style.display = homepageEvents.length > 3 ? 'inline-flex' : 'none';
+      toggleBtn.textContent = showAllFeaturedEvents ? 'Show Less' : 'View All Events';
+      sectionNote.textContent = showAllFeaturedEvents
+        ? `Showing all ${homepageEvents.length} events`
+        : `Showing top ${visibleEvents.length} featured events`;
+
+      container.innerHTML = visibleEvents
+        .map((event) => {
+          const eventDate = new Date(event.eventDateTime);
+          const formattedDate = eventDate.toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          });
+          const formattedTime = eventDate.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+          const shortDescription = event.description && event.description.trim()
+            ? event.description.trim()
+            : 'Explore this event and see if it matches your team, timing, and format.';
+
+          return `
+            <article class="featured-event-card panel">
+              <div class="featured-event-visual">
+                ${event.bannerImage
+                  ? `<img class="featured-event-banner" src="${event.bannerImage}" alt="${event.title}">`
+                  : `<div class="featured-event-banner" style="display:flex; align-items:center; justify-content:center; color:white; font-size:1.1rem; font-weight:700;">FlexHub Event</div>`
+                }
+                <div class="featured-event-badge-row">
+                  <span class="featured-event-mode">${event.eventMode.toUpperCase()}</span>
+                  <span class="featured-event-date">${formattedDate}</span>
+                </div>
+              </div>
+              <div class="featured-event-content">
+                <div class="featured-event-topline">
+                  <h3>${event.title}</h3>
+                  <span class="featured-event-fee">${event.registrationFee > 0 ? `Rs. ${event.registrationFee}` : 'Free'}</span>
+                </div>
+                <p class="featured-event-description">${shortDescription}</p>
+                <div class="featured-event-meta-grid">
+                  <div class="featured-event-meta">
+                    <strong>Schedule</strong>
+                    <span>${formattedTime}</span>
+                  </div>
+                  <div class="featured-event-meta">
+                    <strong>Team Size</strong>
+                    <span>${event.teamMinSize}-${event.teamMaxSize} members</span>
+                  </div>
+                </div>
+                <div class="featured-event-organizer">
+                  <strong>Organizer:</strong> ${event.organizer.name}
+                </div>
+                <div class="featured-event-actions">
+                  <button type="button" class="btn-primary" onclick="goToFeaturedEvent('${event.slug}')">View Event</button>
+                  <button type="button" class="btn-edit" onclick="goToBrowseEvents()">Browse More</button>
+                </div>
+              </div>
+            </article>
+          `;
+        })
+        .join('');
+    };
+
+    const goToFeaturedEvent = (slug) => {
+      if (isLoggedIn()) {
+        window.location.href = `/event-details?slug=${slug}`;
+      } else {
+        window.location.href = `/login?redirect=/event-details?slug=${slug}`;
+      }
+    };
+
+    const goToBrowseEvents = () => {
+      window.location.href = '/browse-events';
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - FlexHub</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav>
+    <h1>FlexHub</h1>
+    <div>
+      <a href="/">Home</a>
+      <a href="/browse-events">Browse Events</a>
+      <a href="/register">Register</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="auth-shell">
+      <form id="loginForm" class="auth-panel glass-card" style="max-width: none;">
+        <h1>Welcome back</h1>
+        <p>Log in to manage events, review registrations, or continue your participant journey.</p>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" required placeholder="your@email.com">
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required placeholder="Enter your password">
+        </div>
+
+        <button type="submit" class="btn-primary" style="width: 100%;">
+          Login
+        </button>
+
+        <p class="auth-footer">
+          Don't have an account? <a href="/register">Register here</a>
+        </p>
+      </form>
+
+      <aside class="auth-aside glass-card">
+        <h2>Everything in one flow.</h2>
+        <p>From event discovery to approvals and payments, FlexHub keeps the experience clear and organized.</p>
+        <ul class="auth-points">
+          <li>Switch between organizer and participant journeys seamlessly.</li>
+          <li>Track event registrations and status updates from your dashboard.</li>
+          <li>Use a cleaner, more focused interface across desktop and mobile.</li>
+        </ul>
+      </aside>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      redirectIfLoggedIn();
+
+      const form = document.getElementById('loginForm');
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById('email').value.trim().toLowerCase();
+        const password = document.getElementById('password').value;
+
+        try {
+          const response = await authAPI.login({ email, password });
+          setLoggedInUser(response.user, response.token);
+          alert('Login successful!');
+
+          const user = response.user;
+          if (user.role === 'organizer') {
+            window.location.href = '/organizer-dashboard';
+          } else {
+            window.location.href = '/participant-dashboard';
+          }
+        } catch (error) {
+          alert('Login failed: ' + error.message);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

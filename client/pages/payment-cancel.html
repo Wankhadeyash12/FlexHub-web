@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Cancelled - FlexHub</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .payment-shell {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .payment-card {
+      width: min(560px, 100%);
+      padding: 2.5rem;
+      text-align: center;
+    }
+
+    .payment-icon {
+      width: 88px;
+      height: 88px;
+      margin: 0 auto 1.25rem;
+      border-radius: 4px;
+      display: grid;
+      place-items: center;
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: white;
+      background: linear-gradient(135deg, #d9485f 0%, #be123c 100%);
+      box-shadow: 0 18px 34px rgba(217, 72, 95, 0.22);
+    }
+
+    .payment-card h1 {
+      color: var(--secondary-color);
+      margin-bottom: 0.75rem;
+      font-size: 2rem;
+    }
+
+    .payment-card p {
+      color: var(--text-muted);
+      margin-bottom: 1.1rem;
+      line-height: 1.7;
+    }
+
+    .info-box {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.16);
+      border-radius: 4px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      text-align: left;
+      color: #8a5a00;
+    }
+
+    .info-box h3 {
+      margin: 0 0 0.75rem 0;
+      color: #8a5a00;
+    }
+
+    .info-box ul {
+      margin: 0;
+      padding-left: 1.2rem;
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .button-group {
+      display: grid;
+      gap: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-shell">
+    <div class="payment-card glass-card">
+      <div class="payment-icon">NO</div>
+      <h1>Payment Cancelled</h1>
+      <p>Your payment was cancelled, so the registration was not completed.</p>
+
+      <div class="info-box">
+        <h3>What happened?</h3>
+        <ul>
+          <li>Your payment was not processed.</li>
+          <li>Your registration remains incomplete.</li>
+          <li>You can return and try again any time.</li>
+        </ul>
+      </div>
+
+      <div class="button-group">
+        <button class="btn-primary" onclick="retryPayment()">Try Payment Again</button>
+        <a href="/browse-events" class="button-link btn-edit">Browse Events</a>
+        <a href="/participant-dashboard" class="button-link btn-edit">Go to Dashboard</a>
+      </div>
+
+      <p style="margin-top: 1.5rem; font-size: 0.92rem;">
+        No charges have been made to your account.
+      </p>
+    </div>
+  </div>
+
+  <script src="/js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      updateNavigation();
+    });
+
+    const retryPayment = () => {
+      window.location.href = '/browse-events';
+    };
+  </script>
+</body>
+</html>

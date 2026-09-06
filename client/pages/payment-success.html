@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Successful - FlexHub</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .payment-shell {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .payment-card {
+      width: min(560px, 100%);
+      padding: 2.5rem;
+      text-align: center;
+    }
+
+    .payment-icon {
+      width: 88px;
+      height: 88px;
+      margin: 0 auto 1.25rem;
+      border-radius: 4px;
+      display: grid;
+      place-items: center;
+      font-size: 2rem;
+      font-weight: 800;
+      color: white;
+      background: linear-gradient(135deg, #1f9d67 0%, #15803d 100%);
+      box-shadow: 0 18px 34px rgba(31, 157, 103, 0.24);
+    }
+
+    .payment-card h1 {
+      color: var(--secondary-color);
+      margin-bottom: 0.75rem;
+      font-size: 2rem;
+    }
+
+    .payment-card p {
+      color: var(--text-muted);
+      margin-bottom: 1.25rem;
+      line-height: 1.7;
+    }
+
+    .details-box {
+      background: var(--surface-muted);
+      border-radius: 4px;
+      padding: 1.25rem;
+      text-align: left;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(35, 48, 65, 0.08);
+    }
+
+    .details-box h3 {
+      color: var(--secondary-color);
+      margin: 0 0 1rem 0;
+    }
+
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.7rem 0;
+      border-bottom: 1px dashed rgba(35, 48, 65, 0.08);
+      color: var(--text-muted);
+    }
+
+    .detail-item:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      font-weight: 700;
+      color: var(--text-color);
+    }
+
+    .button-group {
+      display: grid;
+      gap: 0.9rem;
+    }
+
+    .error-message {
+      display: none;
+      background-color: rgba(217, 72, 95, 0.12);
+      color: #9f1239;
+      padding: 1rem;
+      border-radius: 2px;
+      margin-bottom: 1.25rem;
+      border: 1px solid rgba(217, 72, 95, 0.16);
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-shell">
+    <div class="payment-card glass-card">
+      <div class="payment-icon">OK</div>
+      <h1>Payment Successful</h1>
+      <p>Your registration has been confirmed and your payment is being processed.</p>
+
+      <div class="error-message" id="errorMessage"></div>
+
+      <div class="details-box" id="detailsBox" style="display: none;">
+        <h3>Registration Details</h3>
+        <div class="detail-item">
+          <span class="detail-label">Event</span>
+          <span class="detail-value" id="eventName">-</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Team Name</span>
+          <span class="detail-value" id="teamName">-</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Team Members</span>
+          <span class="detail-value" id="teamMembers">-</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Payment Status</span>
+          <span class="detail-value" id="paymentStatus">-</span>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button class="btn-success" onclick="goToDashboard()">Go to Dashboard</button>
+        <a href="/browse-events" class="button-link btn-primary">Browse More Events</a>
+      </div>
+
+      <p style="margin-top: 1.5rem; font-size: 0.92rem;">
+        A confirmation email has been sent to your registered email address.
+      </p>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      updateNavigation();
+      verifyPayment();
+    });
+
+    const verifyPayment = async () => {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('order_id');
+
+        if (!sessionId) {
+          showError('Order ID not found');
+          return;
+        }
+
+        const response = await fetch(
+          `/api/payments/session-details?sessionId=${sessionId}`,
+          {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error('Failed to verify payment');
+        }
+
+        const data = await response.json();
+        displayRegistrationDetails(data.registration);
+        document.getElementById('detailsBox').style.display = 'block';
+      } catch (error) {
+        console.error('Verify payment error:', error);
+        showError('Failed to verify payment: ' + error.message);
+      }
+    };
+
+    const displayRegistrationDetails = (registration) => {
+      document.getElementById('eventName').textContent = registration.event.title;
+      document.getElementById('teamName').textContent = registration.teamName;
+      document.getElementById('teamMembers').textContent = registration.teamMembers
+        ? registration.teamMembers.length
+        : '0';
+      document.getElementById('paymentStatus').textContent =
+        registration.paymentStatus === 'Completed' ? 'Completed' : registration.paymentStatus;
+    };
+
+    const showError = (message) => {
+      const errorBox = document.getElementById('errorMessage');
+      errorBox.textContent = message;
+      errorBox.style.display = 'block';
+    };
+
+    const goToDashboard = () => {
+      const user = getLoggedInUser();
+      if (user && user.role === 'participant') {
+        window.location.href = '/participant-dashboard';
+      } else if (user && user.role === 'organizer') {
+        window.location.href = '/organizer-dashboard';
+      } else {
+        window.location.href = '/';
+      }
+    };
+  </script>
+</body>
+</html>

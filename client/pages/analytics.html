@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics - FlexHub</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+</head>
+<body>
+  <nav>
+    <h1>Analytics</h1>
+    <div>
+      <a href="/">Home</a>
+      <a href="/organizer-dashboard">Dashboard</a>
+    </div>
+    <div id="nav-user-info"></div>
+  </nav>
+
+  <div class="container page-shell">
+    <section class="hero glass-card" style="padding: 2.5rem;">
+      <div class="hero-eyebrow">Insights</div>
+      <h1 class="page-title">See how your events are performing.</h1>
+      <p class="page-subtitle">Metrics, charts, and event-level performance now sit inside the same updated visual system as the rest of the platform.</p>
+    </section>
+
+    <div id="analyticsContainer">
+      <div class="panel text-center p-2">
+        <p>Loading analytics...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/auth.js"></script>
+  <script src="/js/analytics.js"></script>
+</body>
+</html>
