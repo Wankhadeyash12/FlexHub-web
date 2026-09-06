@@ -8,8 +8,24 @@
   ],
   "routes": [
     {
-      "src": "/(.*)",
+      "src": "/api/(.*)",
       "dest": "/api/index.js"
+    },
+    {
+      "src": "/css/(.*)",
+      "dest": "/client/css/$1"
+    },
+    {
+      "src": "/js/(.*)",
+      "dest": "/client/js/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/client/pages/index.html"
+    },
+    {
+      "src": "/(login|register|browse-events|organizer-dashboard|create-event|event-details|participate|participant-dashboard|analytics|payment-success|payment-cancel)",
+      "dest": "/client/pages/$1.html"
     }
   ]
 }
