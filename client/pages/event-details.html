@@ -204,6 +204,7 @@
 
           if (event.registrationFee > 0) {
             const checkoutResponse = await paymentAPI.createCheckoutSession(registrationData);
+<<<<<<< HEAD
 
             if (checkoutResponse.mockPayment) {
               alert('Registration successful! Payment is skipped in local demo mode.');
@@ -211,6 +212,8 @@
               return;
             }
 
+=======
+>>>>>>> 71867d3cf50f05bb533d8b39897b37395560e685
             const options = {
               key: checkoutResponse.key,
               amount: checkoutResponse.amount,

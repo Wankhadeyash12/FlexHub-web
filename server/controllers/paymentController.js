@@ -86,6 +86,7 @@ const createCheckoutSession = async (req, res) => {
     }
 
     registration.razorpayOrderId = orderResult.order.id;
+<<<<<<< HEAD
 
     if (orderResult.mockOrder) {
       registration.paymentStatus = 'Completed';
@@ -110,6 +111,8 @@ const createCheckoutSession = async (req, res) => {
       });
     }
 
+=======
+>>>>>>> 71867d3cf50f05bb533d8b39897b37395560e685
     await registration.save();
 
     res.json({
@@ -166,6 +169,7 @@ const verifyPayment = async (req, res) => {
       });
     }
 
+<<<<<<< HEAD
     if (orderId?.startsWith('mock_order_')) {
       registration.paymentStatus = 'Completed';
       registration.razorpayPaymentId = paymentId || `mock_payment_${Date.now()}`;
@@ -178,6 +182,8 @@ const verifyPayment = async (req, res) => {
       });
     }
 
+=======
+>>>>>>> 71867d3cf50f05bb533d8b39897b37395560e685
     const isValidSignature = razorpayService.verifyPaymentSignature(
       orderId,
       paymentId,

@@ -1,12 +1,19 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
+<<<<<<< HEAD
 const jwtSecret = process.env.JWT_SECRET || 'dev_flexhub_jwt_secret_change_me';
 
 const generateToken = (user) => {
   return jwt.sign(
     { id: user._id, email: user.email, role: user.role },
     jwtSecret,
+=======
+const generateToken = (user) => {
+  return jwt.sign(
+    { id: user._id, email: user.email, role: user.role },
+    process.env.JWT_SECRET,
+>>>>>>> 71867d3cf50f05bb533d8b39897b37395560e685
     { expiresIn: '7d' }
   );
 };

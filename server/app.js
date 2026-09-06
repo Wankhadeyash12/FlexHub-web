@@ -17,16 +17,21 @@ const app = express();
 connectDB();
 
 // Middleware
+<<<<<<< HEAD
 app.use(cors({
   origin: true,
   credentials: true,
 }));
 app.options('*', cors());
+=======
+app.use(cors());
+>>>>>>> 71867d3cf50f05bb533d8b39897b37395560e685
 
 // JSON parser for other requests
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+<<<<<<< HEAD
 app.get('/api/health', (req, res) => {
   res.status(200).json({
     status: 'ok',
@@ -35,6 +40,8 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+=======
+>>>>>>> 71867d3cf50f05bb533d8b39897b37395560e685
 // Serve static files
 app.use(express.static(path.join(__dirname, '../client')));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
