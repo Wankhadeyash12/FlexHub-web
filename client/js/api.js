@@ -4,7 +4,6 @@ const resolveApiBaseUrl = () => {
   if (typeof document !== 'undefined') {
     const meta = document.querySelector('meta[name="api-base-url"]');
     if (meta && meta.content) return meta.content;
-<<<<<<< HEAD
 
     const body = document.body;
     if (body && body.dataset && body.dataset.apiBaseUrl) return body.dataset.apiBaseUrl;
@@ -14,9 +13,6 @@ const resolveApiBaseUrl = () => {
     return `${window.location.origin}/api`;
   }
 
-=======
-  }
->>>>>>> 71867d3cf50f05bb533d8b39897b37395560e685
   return '/api';
 };
 
