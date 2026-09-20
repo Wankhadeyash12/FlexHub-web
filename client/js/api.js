@@ -9,10 +9,8 @@ const resolveApiBaseUrl = () => {
     if (body && body.dataset && body.dataset.apiBaseUrl) return body.dataset.apiBaseUrl;
   }
 
-  if (typeof window !== 'undefined' && window.location && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-    return 'https://flexhub-web-2.onrender.com/api';
-  }
-
+  // Same origin: the Express server serves both the client and the API.
+  // Works on localhost and on any Render URL without hardcoding a domain.
   return '/api';
 };
 
@@ -33,9 +31,7 @@ const apiCall = async (endpoint, method = 'GET', body = null, isFormData = false
   };
 
   const token = getToken();
-  if (token && !isFormData) {
-    options.headers['Authorization'] = `Bearer ${token}`;
-  } else if (token && isFormData) {
+  if (token) {
     options.headers['Authorization'] = `Bearer ${token}`;
   }
 
