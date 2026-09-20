@@ -6,7 +6,14 @@ form teams, register, and track their participation.
 
 ## Live Application
 
-Visit FlexHub: **https://flexhub-web-2.onrender.com**
+Visit FlexHub: **https://flexhub-3vkh.onrender.com**
+
+> **Note:** The app is hosted on Render's free tier, so the first load after a period of
+> inactivity can take up to a minute while the server wakes up.
+>
+> Payments run in **Razorpay Test Mode**, so no real money is charged. At checkout, choose
+> **Netbanking** or **Wallet** and click **Success** on the mock page, or use the test card
+> `5500 6700 0000 1002` with any future expiry and any CVV.
 
 ## What You Can Do
 
